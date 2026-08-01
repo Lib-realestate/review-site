@@ -81,20 +81,39 @@ if (files.length === 0) {
 }
 
 // h3見出しのテキストが products[].name と完全一致したら、直後に購入ボタンを挿入する
-function injectProductButtons(html, products) {
+// h3見出しのテキストが products[].name と完全一致したら、直後に「写真+購入ボタン」カードを挿入する
+function injectProductCards(html, products) {
   if (!Array.isArray(products) || products.length === 0) return html;
   let out = html;
   for (const p of products) {
     if (!p.name || !p.url) continue;
     const heading = `<h3>${p.name}</h3>`;
     if (!out.includes(heading)) {
-      console.warn(`  ⚠ 見出し "${p.name}" が本文に見つからず、購入ボタンを挿入できませんでした（本文の### 見出しと1文字違わず一致させてください）`);
+      console.warn(`  ⚠ 見出し "${p.name}" が本文に見つからず、購入カードを挿入できませんでした（本文の### 見出しと1文字違わず一致させてください）`);
       continue;
     }
-    const button = `<p class="buy-btn-wrap"><a class="buy-btn" href="${escapeHtmlAttr(p.url)}" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a></p>`;
-    out = out.replace(heading, heading + button);
+    const photo = p.image
+      ? `<a class="buy-photo" href="${escapeHtmlAttr(p.url)}" target="_blank" rel="nofollow sponsored noopener"><img src="${escapeHtmlAttr(p.image)}" alt="${escapeHtmlAttr(p.name)}" loading="lazy" width="96" height="96"></a>`
+      : "";
+    const card = `<div class="buy-card">${photo}<a class="buy-btn" href="${escapeHtmlAttr(p.url)}" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a></div>`;
+    out = out.replace(heading, heading + card);
   }
   return out;
+}
+
+// 本文・比較表のどこにでも書ける短縮リンク記法: {{buy:商品名}} → 小さな「見る→」リンクに変換
+// (products の name と一致するものを探す。表のセル内でも使えるよう、Markdown解析前の生テキストに対して行う)
+function resolveInlineShortcodes(content, products) {
+  const byName = new Map((products || []).filter((p) => p.name && p.url).map((p) => [p.name, p]));
+  return content.replace(/\{\{buy:([^}]+)\}\}/g, (match, rawName) => {
+    const name = rawName.trim();
+    const p = byName.get(name);
+    if (!p) {
+      console.warn(`  ⚠ {{buy:${name}}} に対応する products が見つかりません（products の name と1文字違わず一致させてください）`);
+      return "";
+    }
+    return `<a class="buy-inline" href="${escapeHtmlAttr(p.url)}" target="_blank" rel="nofollow sponsored noopener">見る→</a>`;
+  });
 }
 
 const articles = files.map((filename) => {
@@ -130,7 +149,7 @@ const articles = files.map((filename) => {
     updated: fmtDate(data.updated || data.date),
     author: data.author || site.author,
     ogImage: data.ogImage || "",
-    html: injectProductButtons(marked.parse(content), data.products),
+    html: injectProductCards(marked.parse(resolveInlineShortcodes(content, data.products)), data.products),
   };
 });
 

@@ -297,6 +297,56 @@ a:focus-visible, button:focus-visible{ outline: 2px solid var(--data); outline-o
 }
 .article-body a{ text-decoration-color: var(--line-strong); }
 
+.buy-card{
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0.7em 0 1.7em;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #FBFDFB;
+}
+.buy-photo{ flex-shrink: 0; line-height: 0; }
+.buy-photo img{
+  width: 88px;
+  height: 88px;
+  object-fit: contain;
+  background: #FFFFFF;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+}
+.buy-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-deep);
+  color: #FFFFFF !important;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  padding: 9px 18px;
+  border-radius: 3px;
+  text-decoration: none !important;
+  white-space: nowrap;
+}
+.buy-btn::after{ content: "→"; }
+.buy-btn:hover{ background: var(--accent); }
+
+.buy-inline{
+  display: inline-flex;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: #FFFFFF !important;
+  background: var(--accent);
+  padding: 2px 9px;
+  border-radius: 999px;
+  text-decoration: none !important;
+  white-space: nowrap;
+}
+.buy-inline:hover{ background: var(--accent-deep); }
+.article-body table .buy-inline{ margin-left: 4px; }
+
 .buy-btn-wrap{ margin: 0.6em 0 1.6em; }
 .buy-btn{
   display: inline-flex;
