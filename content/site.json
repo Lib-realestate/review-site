@@ -13,27 +13,33 @@
   "categories": [
     {
       "name": "育児用品",
-      "slug": "baby-care"
+      "slug": "baby-care",
+      "color": { "accent": "#0F6B5C", "accentDeep": "#0B4E43", "accentSoft": "#DCEAE6" }
     },
     {
       "name": "キッチン・食品",
-      "slug": "kitchen-food"
+      "slug": "kitchen-food",
+      "color": { "accent": "#B8860B", "accentDeep": "#8C6608", "accentSoft": "#F5E9C8" }
     },
     {
       "name": "洗濯・掃除",
-      "slug": "cleaning"
+      "slug": "cleaning",
+      "color": { "accent": "#2A6FA8", "accentDeep": "#1F5480", "accentSoft": "#DCEAF5" }
     },
     {
       "name": "ヘアケア・スキンケア",
-      "slug": "haircare-skincare"
+      "slug": "haircare-skincare",
+      "color": { "accent": "#A34B72", "accentDeep": "#7D3857", "accentSoft": "#F5DCE6" }
     },
     {
       "name": "ペット用品",
-      "slug": "pet"
+      "slug": "pet",
+      "color": { "accent": "#B5542A", "accentDeep": "#8A3E1D", "accentSoft": "#F5E1D4" }
     },
     {
       "name": "健康・サプリ",
-      "slug": "health"
+      "slug": "health",
+      "color": { "accent": "#3F7D4F", "accentDeep": "#2E5E3B", "accentSoft": "#DCEEDF" }
     }
   ]
 }

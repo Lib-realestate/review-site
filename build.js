@@ -138,6 +138,51 @@ function normalizeProducts(products, filename) {
   });
 }
 
+// 「良い点：〜 気になる点：〜 向いている人：〜」の1段落を、色分けされた3枚のカードに変換する
+function styleReviewPoints(html) {
+  return html.replace(
+    /<p>良い点[:：]([\s\S]*?)\n気になる点[:：]([\s\S]*?)\n向いている人[:：]([\s\S]*?)<\/p>/g,
+    (m, good, bad, fit) => `<div class="review-points">
+<div class="review-point review-point--good"><span class="review-point__label">良い点</span><p>${good.trim()}</p></div>
+<div class="review-point review-point--bad"><span class="review-point__label">気になる点</span><p>${bad.trim()}</p></div>
+<div class="review-point review-point--fit"><span class="review-point__label">向いている人</span><p>${fit.trim()}</p></div>
+</div>`
+  );
+}
+
+// 「**1. タイトル** 本文」の段落を、番号つきの目立つカードに変換する
+function styleCriteriaCards(html) {
+  return html.replace(
+    /<p><strong>(\d+)\.\s*([^<]+)<\/strong>\n([\s\S]*?)<\/p>/g,
+    (m, num, title, body) => `<div class="criteria-card">
+<span class="criteria-card__num">${num}</span>
+<div><span class="criteria-card__title">${title.trim()}</span><p>${body.trim()}</p></div>
+</div>`
+  );
+}
+
+// カテゴリーごとのオリジナルアイコン(著作権フリー、自作SVG)
+const CATEGORY_ICONS = {
+  "baby-care": '<rect x="9" y="8" width="6" height="13" rx="2"/><rect x="10" y="4" width="4" height="4" rx="1"/><rect x="10.5" y="2" width="3" height="2.5" rx="0.5"/>',
+  "kitchen-food": '<path d="M6 4h12l-1.5 14a2 2 0 0 1-2 1.8h-5a2 2 0 0 1-2-1.8L6 4z"/>',
+  "cleaning": '<path d="M12 2s7 8 7 12.5a7 7 0 1 1-14 0C5 10 12 2 12 2z"/>',
+  "haircare-skincare": '<path d="M12 2l1.9 6.1L20 10l-6.1 1.9L12 18l-1.9-6.1L4 10l6.1-1.9L12 2z"/>',
+  "pet": '<circle cx="12" cy="16" r="4"/><circle cx="5.5" cy="9" r="2"/><circle cx="9.5" cy="4.5" r="2"/><circle cx="14.5" cy="4.5" r="2"/><circle cx="18.5" cy="9" r="2"/>',
+  "health": '<path d="M11 4h2v6h6v2h-6v6h-2v-6H5v-2h6V4z"/>',
+};
+function categoryIcon(slug) {
+  const inner = CATEGORY_ICONS[slug];
+  return inner ? `<svg class="tag-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${inner}</svg>` : "";
+}
+
+// カテゴリーの差し色をそのページのCSS変数として注入するstyle属性を作る
+function bodyStyleFor(categorySlug) {
+  const cat = site.categories.find((c) => c.slug === categorySlug);
+  if (!cat || !cat.color) return "";
+  const { accent, accentDeep, accentSoft } = cat.color;
+  return ` style="--accent:${accent};--accent-deep:${accentDeep};--accent-soft:${accentSoft};"`;
+}
+
 const articles = files.map((filename) => {
   const raw = fs.readFileSync(path.join(CONTENT_DIR, filename), "utf8");
   const { data, content } = matter(raw);
@@ -174,7 +219,7 @@ const articles = files.map((filename) => {
     ogImage: data.ogImage || data.heroImage || "",
     heroImage: data.heroImage || "",
     heroImageAlt: data.heroImageAlt || data.title,
-    html: injectProductCards(marked.parse(resolveInlineShortcodes(content, products)), products),
+    html: styleCriteriaCards(styleReviewPoints(injectProductCards(marked.parse(resolveInlineShortcodes(content, products)), products))),
   };
 });
 
@@ -215,16 +260,24 @@ function jsonLdForArticle(a) {
   });
 }
 
+function categoryColorFor(slug) {
+  const cat = site.categories.find((c) => c.slug === slug);
+  return (cat && cat.color) || { accent: "#0F6B5C", accentDeep: "#0B4E43", accentSoft: "#DCEAE6" };
+}
+
 function cardHtml(a) {
   const thumb = a.heroImage
     ? `<div class="article-card__thumb"><img src="${escapeHtmlAttr(a.heroImage)}" alt="${escapeHtmlAttr(a.heroImageAlt)}" loading="lazy"></div>`
     : "";
+  const c = categoryColorFor(a.categorySlug);
+  const tagStyle = `background:${c.accentSoft};color:${c.accentDeep};`;
   return `<a class="article-card" href="${BASE}/articles/${a.slug}/">
       ${thumb}
-      <div class="eyebrow"><span class="tag">${a.category}</span><span>No.${a.logNumber}</span></div>
+      <div class="eyebrow"><span class="tag" style="${tagStyle}">${categoryIcon(a.categorySlug)}${a.category}</span><span>No.${a.logNumber}</span></div>
       <h2 class="article-card__title">${a.title}</h2>
       <p class="article-card__desc">${a.description}</p>
       <p class="article-card__meta">更新: ${a.updated}</p>
+
     </a>`;
 }
 
@@ -250,6 +303,7 @@ for (const a of articles) {
     KEYWORDS: a.keywords,
     CANONICAL: `${SITE_ROOT}/articles/${a.slug}/`,
     GSC_TAG: gscTag,
+    BODY_STYLE: bodyStyleFor(a.categorySlug),
     SITE_NAME: site.siteName,
     SITE_NAME_HTML: site.siteNameHtml || site.siteName,
     TAGLINE: site.tagline,
@@ -258,7 +312,7 @@ for (const a of articles) {
     ASSET_PATH: `${BASE}/assets/`,
     HOME_PATH: `${BASE}/`,
     NAV_LINKS: navLinks,
-    CATEGORY: a.category,
+    CATEGORY: `${categoryIcon(a.categorySlug)}${a.category}`,
     LOG_NUMBER: a.logNumber,
     DATE_PUBLISHED: a.date,
     DATE_MODIFIED: a.updated,
@@ -277,12 +331,13 @@ for (const a of articles) {
 
 // ---------- 4. 一覧ページ生成(共通関数) ----------
 const listTpl = readTemplate("list.html");
-function writeListPage({ outPath, canonical, title, description, h1, intro, items }) {
+function writeListPage({ outPath, canonical, title, description, h1, intro, items, categorySlug }) {
   const html = fill(listTpl, {
     TITLE: title,
     DESCRIPTION: description,
     CANONICAL: canonical,
     GSC_TAG: gscTag,
+    BODY_STYLE: categorySlug ? bodyStyleFor(categorySlug) : "",
     SITE_NAME: site.siteName,
     SITE_NAME_HTML: site.siteNameHtml || site.siteName,
     TAGLINE: site.tagline,
@@ -321,6 +376,7 @@ for (const c of activeCategories) {
     h1: c.name,
     intro: `${c.name}のジャンルで、実際に使って比較した記事の一覧です。`,
     items,
+    categorySlug: c.slug,
   });
 }
 

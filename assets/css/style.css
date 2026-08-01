@@ -15,6 +15,7 @@
   --caution:       #A0552A;
   --caution-soft:  #F3E4D8;
   --data:          #2B4C7E;
+  --data-soft:     #DDE6F0;
   --line:          #D8DCD3;
   --line-strong:   #B9C0B4;
   --radius:        3px;
@@ -381,6 +382,80 @@ a:focus-visible, button:focus-visible{ outline: 2px solid var(--data); outline-o
 }
 .buy-inline:hover{ background: var(--accent-deep); }
 .article-body table .buy-inline{ margin-left: 4px; }
+
+/* ---------- 良い点・気になる点・向いている人 カード ---------- */
+.review-points{
+  display: grid;
+  gap: 10px;
+  margin: 0.8em 0 1.8em;
+}
+.review-point{
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: start;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  border-left: 4px solid;
+}
+.review-point p{ margin: 0; font-size: 0.95rem; }
+.review-point__label{
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 3px 0;
+  white-space: nowrap;
+}
+.review-point--good{ background: var(--accent-soft); border-left-color: var(--accent); }
+.review-point--good .review-point__label{ color: var(--accent-deep); }
+.review-point--good .review-point__label::before{ content: "◎ "; }
+.review-point--bad{ background: var(--caution-soft); border-left-color: var(--caution); }
+.review-point--bad .review-point__label{ color: var(--caution); }
+.review-point--bad .review-point__label::before{ content: "△ "; }
+.review-point--fit{ background: var(--data-soft); border-left-color: var(--data); }
+.review-point--fit .review-point__label{ color: var(--data); }
+.review-point--fit .review-point__label::before{ content: "→ "; }
+
+@media (min-width: 640px){
+  .review-point{ grid-template-columns: 96px 1fr; }
+}
+
+/* ---------- 選ぶときに見るべき基準 番号カード ---------- */
+.criteria-card{
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  align-items: start;
+  margin: 0 0 1.2em;
+  padding: 14px 18px;
+  background: var(--bg-card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--accent);
+  border-radius: var(--radius);
+}
+.criteria-card__num{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.8rem;
+  color: var(--accent);
+  line-height: 1;
+}
+.criteria-card__title{
+  font-weight: 600;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 4px;
+}
+.criteria-card p{ margin: 0; }
+
+/* ---------- カテゴリーアイコン ---------- */
+.tag-icon{
+  width: 14px;
+  height: 14px;
+  vertical-align: -2px;
+  margin-right: 3px;
+}
 
 .buy-btn-wrap{ margin: 0.6em 0 1.6em; }
 .buy-btn{
