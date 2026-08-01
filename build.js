@@ -136,6 +136,10 @@ function ogImageTag(a) {
   return a.ogImage ? `<meta property="og:image" content="${escapeHtmlAttr(a.ogImage)}">` : "";
 }
 
+const gscTag = site.googleSiteVerification
+  ? `<meta name="google-site-verification" content="${escapeHtmlAttr(site.googleSiteVerification)}">`
+  : "";
+
 function jsonLdForArticle(a) {
   return JSON.stringify({
     "@context": "https://schema.org",
@@ -180,6 +184,7 @@ for (const a of articles) {
     DESCRIPTION: a.description,
     KEYWORDS: a.keywords,
     CANONICAL: `${SITE_ROOT}/articles/${a.slug}/`,
+    GSC_TAG: gscTag,
     SITE_NAME: site.siteName,
     SITE_NAME_HTML: site.siteNameHtml || site.siteName,
     TAGLINE: site.tagline,
@@ -209,6 +214,7 @@ function writeListPage({ outPath, canonical, title, description, h1, intro, item
     TITLE: title,
     DESCRIPTION: description,
     CANONICAL: canonical,
+    GSC_TAG: gscTag,
     SITE_NAME: site.siteName,
     SITE_NAME_HTML: site.siteNameHtml || site.siteName,
     TAGLINE: site.tagline,

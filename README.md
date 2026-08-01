@@ -93,6 +93,16 @@ npx serve docs
 
 自動化を使わず手動で公開したい場合は、`.gitignore` から `docs/` を外して `npm run build` 後に `docs/` ごとコミットし、Settings → Pages → Source を `main` ブランチ `/docs` に設定する。
 
+## 6. Google Search Consoleの所有権確認
+
+1. https://search.google.com/search-console/ で「HTMLタグ」方式を選び、`content="..."` の中身（コードの文字列だけ）をコピー
+2. `content/site.json` の `"googleSiteVerification": ""` の `""` の中に貼り付ける
+3. `git add . / git commit / git push`（またはGitHub Desktopでコミット→Push）
+4. Actionsのビルドが終わるのを待つ
+5. Search Consoleに戻って「確認」をクリック
+
+このフィールドが空欄の間は何も出力されないので、使わない場合はそのままで問題ない。
+
 ## SEOのために自動でやっていること
 
 - 記事ごとに固有URL（`/articles/スラッグ/`）と個別のtitle・description・OGP・Twitter Card
