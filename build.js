@@ -112,13 +112,36 @@ function resolveInlineShortcodes(content, products) {
       console.warn(`  ⚠ {{buy:${name}}} に対応する products が見つかりません（products の name と1文字違わず一致させてください）`);
       return "";
     }
-    return `<a class="buy-inline" href="${escapeHtmlAttr(p.url)}" target="_blank" rel="nofollow sponsored noopener">見る→</a>`;
+    const thumb = p.image
+      ? `<img class="buy-inline__thumb" src="${escapeHtmlAttr(p.image)}" alt="" loading="lazy">`
+      : "";
+    return `<a class="buy-inline" href="${escapeHtmlAttr(p.url)}" target="_blank" rel="nofollow sponsored noopener">${thumb}見る→</a>`;
+  });
+}
+
+// 楽天のリンク作成画面で「画像とテキスト」等をコピーした生コードから、
+// 商品URL・画像URLを自動で抜き出す（productsに raw: を書いた場合のみ使う）
+function normalizeProducts(products, filename) {
+  if (!Array.isArray(products)) return products;
+  return products.map((p, i) => {
+    if (!p.raw) return p;
+    const hrefMatch = p.raw.match(/<a\s+href="([^"]+)"/);
+    const imgMatch = p.raw.match(/<img\s+src="([^"]+)"/);
+    if (!p.url && !hrefMatch) {
+      throw new Error(`[${filename}] products[${i}] "${p.name || "(名前なし)"}" の raw からURLを見つけられませんでした。url を直接指定してください。`);
+    }
+    return {
+      name: p.name,
+      url: p.url || hrefMatch[1],
+      image: p.image || (imgMatch ? imgMatch[1] : ""),
+    };
   });
 }
 
 const articles = files.map((filename) => {
   const raw = fs.readFileSync(path.join(CONTENT_DIR, filename), "utf8");
   const { data, content } = matter(raw);
+  const products = normalizeProducts(data.products, filename);
 
   const required = ["title", "description", "category", "date"];
   for (const key of required) {
@@ -151,7 +174,7 @@ const articles = files.map((filename) => {
     ogImage: data.ogImage || data.heroImage || "",
     heroImage: data.heroImage || "",
     heroImageAlt: data.heroImageAlt || data.title,
-    html: injectProductCards(marked.parse(resolveInlineShortcodes(content, data.products)), data.products),
+    html: injectProductCards(marked.parse(resolveInlineShortcodes(content, products)), products),
   };
 });
 

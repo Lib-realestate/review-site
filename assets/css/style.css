@@ -360,14 +360,24 @@ a:focus-visible, button:focus-visible{ outline: 2px solid var(--data); outline-o
 
 .buy-inline{
   display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-family: var(--font-mono);
   font-size: 0.76rem;
   color: #FFFFFF !important;
   background: var(--accent);
-  padding: 2px 9px;
+  padding: 3px 10px 3px 3px;
   border-radius: 999px;
   text-decoration: none !important;
   white-space: nowrap;
+}
+.buy-inline__thumb{
+  width: 26px;
+  height: 26px;
+  object-fit: contain;
+  background: #FFFFFF;
+  border-radius: 999px;
+  flex-shrink: 0;
 }
 .buy-inline:hover{ background: var(--accent-deep); }
 .article-body table .buy-inline{ margin-left: 4px; }
