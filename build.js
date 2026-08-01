@@ -148,7 +148,9 @@ const articles = files.map((filename) => {
     date: fmtDate(data.date),
     updated: fmtDate(data.updated || data.date),
     author: data.author || site.author,
-    ogImage: data.ogImage || "",
+    ogImage: data.ogImage || data.heroImage || "",
+    heroImage: data.heroImage || "",
+    heroImageAlt: data.heroImageAlt || data.title,
     html: injectProductCards(marked.parse(resolveInlineShortcodes(content, data.products)), data.products),
   };
 });
@@ -191,7 +193,11 @@ function jsonLdForArticle(a) {
 }
 
 function cardHtml(a) {
+  const thumb = a.heroImage
+    ? `<div class="article-card__thumb"><img src="${escapeHtmlAttr(a.heroImage)}" alt="${escapeHtmlAttr(a.heroImageAlt)}" loading="lazy"></div>`
+    : "";
   return `<a class="article-card" href="${BASE}/articles/${a.slug}/">
+      ${thumb}
       <div class="eyebrow"><span class="tag">${a.category}</span><span>No.${a.logNumber}</span></div>
       <h2 class="article-card__title">${a.title}</h2>
       <p class="article-card__desc">${a.description}</p>
@@ -234,6 +240,9 @@ for (const a of articles) {
     DATE_PUBLISHED: a.date,
     DATE_MODIFIED: a.updated,
     AUTHOR: a.author,
+    HERO_IMAGE: a.heroImage
+      ? `<div class="article-hero__image"><img src="${escapeHtmlAttr(a.heroImage)}" alt="${escapeHtmlAttr(a.heroImageAlt)}" loading="lazy"></div>`
+      : "",
     CONTENT: a.html,
     JSON_LD: jsonLdForArticle(a),
     RELATED_SECTION: relatedSection(a),

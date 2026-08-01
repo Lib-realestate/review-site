@@ -7,6 +7,7 @@ keywords: ["紙おむつ 比較", "おしりふき 比較", "肌に優しい", "
 date: "2026-08-01"
 updated: "2026-08-01"
 author: "レビュー編集部"
+heroImage: "https://hbb.afl.rakuten.co.jp/hgb/563bc5e2.58e00677.563bc5e3.122a4ece/?me_id=1423341&item_id=10002879&pc=https%3A%2F%2Fimage.rakuten.co.jp%2Fhomedavinci%2Fcabinet%2F0622%2Fimage_0032.jpg%3F_ex%3D240x240&s=240x240&t=picttext"
 products:
   - name: "メリーズ さらさらエアスルー パンツ"
     url: "https://hb.afl.rakuten.co.jp/ichiba/563bc5e2.58e00677.563bc5e3.122a4ece/?pc=https%3A%2F%2Fitem.rakuten.co.jp%2Fhomedavinci%2Fct67490%2F&link_type=picttext&ut=eyJwYWdlIjoiaXRlbSIsInR5cGUiOiJwaWN0dGV4dCIsInNpemUiOiIyNDB4MjQwIiwibmFtIjoxLCJuYW1wIjoicmlnaHQiLCJjb20iOjEsImNvbXAiOiJkb3duIiwicHJpY2UiOjEsImJvciI6MSwiY29sIjoxLCJiYnRuIjoxLCJwcm9kIjowLCJhbXAiOmZhbHNlfQ%3D%3D"
