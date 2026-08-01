@@ -297,6 +297,23 @@ a:focus-visible, button:focus-visible{ outline: 2px solid var(--data); outline-o
 }
 .article-body a{ text-decoration-color: var(--line-strong); }
 
+.buy-btn-wrap{ margin: 0.6em 0 1.6em; }
+.buy-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--accent-deep);
+  color: #FFFFFF !important;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.02em;
+  padding: 9px 18px;
+  border-radius: 3px;
+  text-decoration: none !important;
+}
+.buy-btn::after{ content: "→"; }
+.buy-btn:hover{ background: var(--accent); }
+
 /* 関連記事 */
 .related{
   border-top: 1px solid var(--line-strong);

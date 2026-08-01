@@ -80,6 +80,23 @@ if (files.length === 0) {
   console.warn("記事(.md)が1つも見つかりません。content/articles/ に追加してください。");
 }
 
+// h3見出しのテキストが products[].name と完全一致したら、直後に購入ボタンを挿入する
+function injectProductButtons(html, products) {
+  if (!Array.isArray(products) || products.length === 0) return html;
+  let out = html;
+  for (const p of products) {
+    if (!p.name || !p.url) continue;
+    const heading = `<h3>${p.name}</h3>`;
+    if (!out.includes(heading)) {
+      console.warn(`  ⚠ 見出し "${p.name}" が本文に見つからず、購入ボタンを挿入できませんでした（本文の### 見出しと1文字違わず一致させてください）`);
+      continue;
+    }
+    const button = `<p class="buy-btn-wrap"><a class="buy-btn" href="${escapeHtmlAttr(p.url)}" target="_blank" rel="nofollow sponsored noopener">楽天市場で見る</a></p>`;
+    out = out.replace(heading, heading + button);
+  }
+  return out;
+}
+
 const articles = files.map((filename) => {
   const raw = fs.readFileSync(path.join(CONTENT_DIR, filename), "utf8");
   const { data, content } = matter(raw);
@@ -113,7 +130,7 @@ const articles = files.map((filename) => {
     updated: fmtDate(data.updated || data.date),
     author: data.author || site.author,
     ogImage: data.ogImage || "",
-    html: marked.parse(content),
+    html: injectProductButtons(marked.parse(content), data.products),
   };
 });
 
