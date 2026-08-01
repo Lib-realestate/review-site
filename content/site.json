@@ -1,0 +1,38 @@
+{
+  "siteName": "ためして選ぶノート",
+  "siteNameHtml": "ためして<em>選ぶ</em>ノート",
+  "siteNameEn": "Tameshite Erabu Note",
+  "tagline": "毎日使うものだけ、実際に試してから比較する",
+  "description": "紙おむつ、洗剤、コーヒー豆など、消耗品・日用品を実際に使って比較するレビューサイトです。良い点だけでなく気になる点も正直に書きます。",
+  "baseUrl": "https://Lib-realestate.github.io",
+  "basePath": "/review-site",
+  "language": "ja",
+  "author": "レビュー編集部",
+  "twitter": "",
+  "categories": [
+    {
+      "name": "育児用品",
+      "slug": "baby-care"
+    },
+    {
+      "name": "キッチン・食品",
+      "slug": "kitchen-food"
+    },
+    {
+      "name": "洗濯・掃除",
+      "slug": "cleaning"
+    },
+    {
+      "name": "ヘアケア・スキンケア",
+      "slug": "haircare-skincare"
+    },
+    {
+      "name": "ペット用品",
+      "slug": "pet"
+    },
+    {
+      "name": "健康・サプリ",
+      "slug": "health"
+    }
+  ]
+}
